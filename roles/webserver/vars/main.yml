@@ -1,0 +1,11 @@
+#SPDX-License-Identifier: MIT-0
+---
+
+
+webserver_env:
+  DOMAIN_NAME: "mmoumni.1337.ma"
+  CERTS_: "/etc/ssl/certs/nginx-selfsigned.crt"
+  KEYS_: "/etc/ssl/private/nginx-selfsigned.key"
+
+docker_image_name: "weberver_image"
+docker_container_name: "webserver_container"
