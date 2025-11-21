@@ -1,0 +1,23 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for webserver
+
+- name: Build the custom Ngnix docker image
+  community.docker.docker_image:
+    name: "{{ docker_image_name }}"
+    source: build
+    build:
+      path: "{{ role_path }}/files"
+    state: present
+
+- name: Run Ngnix Container with environment variables
+  community.docker.docker_container:
+    name: "{{ docker_container_name }}"
+    image: "{{ docker_image_name }}"
+    restart: yes
+    env: "{{ webserver_env }}"
+    networks:
+      - name: cloud_network
+    ports:
+      - "443:443"
+      - "80:80"

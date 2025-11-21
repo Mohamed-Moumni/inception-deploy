@@ -31,5 +31,7 @@
     image: "{{ docker_image_name }}"
     restart: yes
     env: "{{ mysql_env }}"
+    networks:
+      - name: cloud_network
     exposed_ports:
       - "3306"
