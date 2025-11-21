@@ -1,8 +1,35 @@
 ---
-- name: Print a message
-  debug:
-    msg: "This is the main task file for the database role."
+- name: Ensure the target directory exists
+  ansible.builtin.file:
+    path: /tmp/docker_build/
+    state: directory
+    mode: '0755'
 
-- name: User our Variable
-  debug:
-    msg: "The Value of example_variable is : {{ example_variable }}"
+- name: Copy Dockerfile to build
+  ansible.builtin.copy:
+    src: Dockerfile
+    dest: /tmp/docker_build/Dockerfile
+    mode: '0644'
+
+- name: Copy script to build
+  ansible.builtin.copy:
+    src: script.sh
+    dest: /tmp/docker_build/script.sh
+    mode: '0644'
+
+- name: Build the custom MariaDb docker image
+  community.docker.docker_image:
+    name: "{{ docker_image_name }}"
+    source: build
+    build:
+      path: "{{ role_path }}/files"
+    state: present
+
+- name: Run MariaDb Container with environment variables
+  community.docker.docker_container:
+    name: "{{ docker_container_name }}"
+    image: "{{ docker_image_name }}"
+    restart: yes
+    env: "{{ mysql_env }}"
+    exposed_ports:
+      - "3306"

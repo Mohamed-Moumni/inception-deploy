@@ -87,5 +87,7 @@
 
 - name: use Database Role
   hosts: localhost
+  tags:
+    - database
   roles:
     - database
