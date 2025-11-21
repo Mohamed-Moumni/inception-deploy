@@ -1,0 +1,20 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Build the custom Wordpress docker image
+  community.docker.docker_image:
+    name: "{{ docker_image_name }}"
+    source: build
+    build:
+      path: "{{ role_path }}/files"
+    state: present
+
+- name: Run Wordpress Container with environment variables
+  community.docker.docker_container:
+    name: "{{ docker_container_name }}"
+    image: "{{ docker_image_name }}"
+    restart: yes
+    env: "{{ wordpress_env }}"
+    networks:
+      - name: cloud_network
+    exposed_ports:
+      - "9000"
