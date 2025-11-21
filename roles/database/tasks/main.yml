@@ -1,0 +1,8 @@
+---
+- name: Print a message
+  debug:
+    msg: "This is the main task file for the database role."
+
+- name: User our Variable
+  debug:
+    msg: "The Value of example_variable is : {{ example_variable }}"

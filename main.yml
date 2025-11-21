@@ -1,0 +1,5 @@
+---
+- name: use Database Role
+  hosts: localhost
+  roles:
+    - database
