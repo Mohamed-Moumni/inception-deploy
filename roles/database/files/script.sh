@@ -1,14 +1,14 @@
 #!/bin/bash
 
 
+# change the bind to 0.0.0.0 only accept client connections made to 0.0.0.0 (accept connection to any address)
+sed -i 's/bind-address            = 127.0.0.1/bind-address = 0.0.0.0/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 # Start MySQL in the background
-mysqld_safe --skip-grant-tables &
+mysqld_safe &
 
 # Wait for MySQL to initialize
 sleep 5
 
-# change the bind to 0.0.0.0 only accept client connections made to 0.0.0.0 (accept connection to any address)
-sed -i 's/bind-address            = 127.0.0.1/bind-address = 0.0.0.0/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 
 # create the database if not exist
 mysql -u root -p$MYSQL_ROOTPASSWORD -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;"
@@ -24,8 +24,5 @@ mysql -u root -p$MYSQL_ROOTPASSWORD -e "FLUSH PRIVILEGES;"
 
 # set the password to the root
 mysql -u root -p$MYSQL_ROOTPASSWORD -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOTPASSWORD';"
-
-# killing the porcess of mysqld to not restarting while waiting the wordpress to get setup
-# kill `cat /var/run/mysqld/mysqld.pid`
 
 wait $!

@@ -11,7 +11,6 @@
       - python3-pip
       - curl
       - gnupg
-      - software-properties-common
       - ca-certificates
       - apt-transport-https
     state: present
@@ -48,7 +47,7 @@
       echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc]
       https://download.docker.com/linux/debian
       $(. /etc/os-release && echo "$VERSION_CODENAME") stable" |
-      sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      tee /etc/apt/sources.list.d/docker.list > /dev/null
     creates: /etc/apt/sources.list.d/docker.list
 
 - name: Update apt cache
@@ -83,3 +82,7 @@
     name: cloud_network
     state: present
     driver: bridge
+
+- name: Create WordPress data volume
+  community.docker.docker_volume:
+    name: data_wp

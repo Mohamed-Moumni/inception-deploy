@@ -22,9 +22,9 @@
   roles:
     - wordpress
 
-# - name: use Webserver Role
-#   hosts: localhost
-#   tags:
-#     - webserver
-#   roles:
-#     - webserver
+- name: use Webserver Role
+  hosts: localhost
+  tags:
+    - webserver
+  roles:
+    - webserver

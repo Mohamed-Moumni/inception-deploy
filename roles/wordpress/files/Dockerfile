@@ -1,9 +1,9 @@
 # base image
-FROM    debian:bookworm-slim
+FROM debian:bullseye-slim
 
 # install php and php-curl and php-mysql and php7.3-fpm and curl and sendmail
-RUN apt update && apt install -y php php-curl php-mysql\
-    && apt install -y php7.3-fpm \
+RUN apt update && apt install -y php php-curl php-mysql && apt install -y default-mysql-client \
+    && apt install -y php7.4-fpm \
     && apt install -y curl \
     && apt install -y sendmail
 
@@ -20,4 +20,4 @@ RUN chmod +x /tmp/script.sh
 ENTRYPOINT [ "/tmp/script.sh" ]
 
 # PHP-FPM to run in the foreground, that is, to not fork into the background as a daemon. This makes it so that the process will run and output any logs to the console where it was started.
-CMD [ "php-fpm7.3", "-F" ]
+CMD [ "php-fpm7.4", "-F" ]

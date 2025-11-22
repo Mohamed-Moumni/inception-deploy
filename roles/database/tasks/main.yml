@@ -1,21 +1,4 @@
 ---
-- name: Ensure the target directory exists
-  ansible.builtin.file:
-    path: /tmp/docker_build/
-    state: directory
-    mode: '0755'
-
-- name: Copy Dockerfile to build
-  ansible.builtin.copy:
-    src: Dockerfile
-    dest: /tmp/docker_build/Dockerfile
-    mode: '0644'
-
-- name: Copy script to build
-  ansible.builtin.copy:
-    src: script.sh
-    dest: /tmp/docker_build/script.sh
-    mode: '0644'
 
 - name: Build the custom MariaDb docker image
   community.docker.docker_image:

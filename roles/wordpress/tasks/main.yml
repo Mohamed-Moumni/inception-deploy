@@ -18,3 +18,5 @@
       - name: cloud_network
     exposed_ports:
       - "9000"
+    volumes:
+      - "data_wp:/var/www/html"
