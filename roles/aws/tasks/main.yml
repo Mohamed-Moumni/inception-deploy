@@ -1,0 +1,54 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Create EC2 Security Group
+  amazon.aws.ec2_security_group:
+    aws_access_key: "{{ env_vars.AWS_ACCESS_KEY_ID }}"
+    aws_secret_key: "{{ env_vars.AWS_SECRET_ACCESS_KEY }}"
+    name: cloud-1
+    description: Cloud-1 EC2 group
+    region: "{{ env_vars.AWS_DEFAULT_REGION }}"
+    state: present
+    rules:
+      - proto: tcp
+        ports:
+          - 80
+          - 443
+        cidr_ip: 0.0.0.0/0
+        rule_desc: Allow HTTP and HTTPS
+      - proto: tcp
+        ports:
+          - 22
+        cidr_ip: 0.0.0.0/0
+        rule_desc: Allow SSH
+
+- name: Launch EC2 instance on AWS
+  amazon.aws.ec2_instance:
+    name: "cloud-instane"
+    aws_access_key: "{{env_vars.AWS_ACCESS_KEY_ID}}"
+    aws_secret_key: "{{env_vars.AWS_SECRET_ACCESS_KEY}}"
+    key_name: cloud
+    security_group: cloud-1
+    region: "{{env_vars.AWS_DEFAULT_REGION}}"
+    instance_type: t2.micro
+    image_id: ami-0157ed312f9c59a91
+    wait: yes
+    count: 1
+  register: ec2_instance
+
+- name: Wait for SSH to be available
+  wait_for:
+    host: "{{ ec2_instance.instances[0].public_ip_address }}"
+    port: 22
+    delay: 10
+    timeout: 300
+    state: started
+
+- name: Add new instance to host group
+  add_host:
+    hostname: "{{ ec2_instance.instances[0].public_ip_address }}"
+    groupname: launched_instances
+    ansible_user: admin
+    ansible_ssh_private_key_file: "{{ playbook_dir }}/cloud.pem"
+    ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null"
+
+    

@@ -1,11 +1,18 @@
 #SPDX-License-Identifier: MIT-0
 ---
+
+- name: Copy MariaDB build context to remote server
+  copy:
+    src: "{{ role_path }}/files/"
+    dest: /tmp/wordpress_build/
+    mode: '0755'
+
 - name: Build the custom Wordpress docker image
   community.docker.docker_image:
     name: "{{ docker_image_name }}"
     source: build
     build:
-      path: "{{ role_path }}/files"
+      path: "/tmp/wordpress_build/"
     state: present
 
 - name: Run Wordpress Container with environment variables

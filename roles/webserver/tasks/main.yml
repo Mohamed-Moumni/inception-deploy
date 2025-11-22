@@ -2,12 +2,18 @@
 ---
 # tasks file for webserver
 
+- name: Copy MariaDB build context to remote server
+  copy:
+    src: "{{ role_path }}/files/"
+    dest: /tmp/webserver_build/
+    mode: '0755'
+
 - name: Build the custom Ngnix docker image
   community.docker.docker_image:
     name: "{{ docker_image_name }}"
     source: build
     build:
-      path: "{{ role_path }}/files"
+      path: "/tmp/webserver_build/"
     state: present
 
 - name: Run Ngnix Container with environment variables

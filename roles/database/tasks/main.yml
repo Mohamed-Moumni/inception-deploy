@@ -1,11 +1,16 @@
 ---
+- name: Copy MariaDB build context to remote server
+  copy:
+    src: "{{ role_path }}/files/"
+    dest: /tmp/mariadb_build/
+    mode: '0755'
 
 - name: Build the custom MariaDb docker image
   community.docker.docker_image:
     name: "{{ docker_image_name }}"
     source: build
     build:
-      path: "{{ role_path }}/files"
+      path: "/tmp/mariadb_build/"
     state: present
 
 - name: Run MariaDb Container with environment variables

@@ -1,0 +1,7 @@
+#SPDX-License-Identifier: MIT-0
+---
+
+env_vars:
+  AWS_ACCESS_KEY_ID: "AKIAQIJRRZC5CVOHQPM5"
+  AWS_SECRET_ACCESS_KEY: "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"
+  AWS_DEFAULT_REGION: "us-west-1"
