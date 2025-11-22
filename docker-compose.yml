@@ -1,0 +1,50 @@
+version: '3.7'
+
+services:
+    mariadb:
+        build: ./roles/database/files
+        container_name: mariadb_container
+        image: mariadb_image
+        env_file:
+            - .env
+        restart: always
+        expose:
+            - '3306'
+        networks:
+            - cloud_network
+    wordpress:
+        build: ./roles/wordpress/files
+        container_name: wordpress
+        image: wordpress
+        env_file:
+            - .env
+        restart: always
+        expose:
+            - '9000'
+        volumes:
+            - data_wp:/var/www/html/
+        networks:
+            - cloud_network
+    nginx:
+        build:  ./roles/webserver/files
+        container_name: webserver_container
+        image: webserver_image
+        env_file:
+            - .env
+        ports:
+            - '443:443'
+        restart: on-failure
+        depends_on:
+            wordpress:
+                condition: service_healthy
+        volumes:
+            - data_wp:/var/www/html/
+        networks:
+            - cloud_network
+
+volumes:
+    data_wp:
+
+networks:
+  cloud_network:
+        driver: bridge
