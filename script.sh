@@ -22,4 +22,4 @@ ansible-galaxy collection install amazon.aws
 
 # run the playbook
 
-ansible-playbook -i inventory.ini main.yml
+ansible-playbook -i inventory.ini main.yml --vault-password-file ./.vault_pass

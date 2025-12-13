@@ -19,7 +19,7 @@
   community.docker.docker_container:
     name: "{{ docker_container_name }}"
     image: "{{ docker_image_name }}"
-    restart: yes
+    restart_policy: unless_stopped
     env: "{{ wordpress_env }}"
     networks:
       - name: cloud_network
