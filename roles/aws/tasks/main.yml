@@ -21,6 +21,16 @@
         cidr_ip: 0.0.0.0/0
         rule_desc: Allow SSH
 
+- name: Check if EC2 instance already exists
+  amazon.aws.ec2_instance_info:
+    aws_access_key: "{{ env_vars.AWS_ACCESS_KEY_ID }}"
+    aws_secret_key: "{{ env_vars.AWS_SECRET_ACCESS_KEY }}"
+    region: "{{ env_vars.AWS_DEFAULT_REGION }}"
+    filters:
+      "tag:Name": cloud-instance
+      instance-state-name: running
+  register: existing_ec2
+
 - name: Launch EC2 instance on AWS
   amazon.aws.ec2_instance:
     name: "cloud-instane"
@@ -32,7 +42,7 @@
     instance_type: t2.micro
     image_id: ami-0157ed312f9c59a91
     wait: yes
-    count: 1
+  when: existing_ec2.instances | length == 0
   register: ec2_instance
 
 - name: Wait for SSH to be available
